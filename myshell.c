@@ -11,11 +11,10 @@
 #define MAX_ARGS    100
 #define MAX_INPUT   1024
 
-//––– English→Unix Translator –––
 typedef struct {
     const char *keywords[4];
     int         n_keywords;
-    const char *template;      // e.g. "cd %s"
+    const char *template;      
 } EngMap;
 
 EngMap mappings[] = {
@@ -46,7 +45,6 @@ int translate_english(char *in, char *out, size_t sz) {
         }
         if (!ok) continue;
 
-        // grab last word as argument
         char *last = strrchr(in, ' ');
         const char *arg = last ? last+1 : "";
         if (strstr(mappings[i].template, "%s"))
@@ -58,7 +56,6 @@ int translate_english(char *in, char *out, size_t sz) {
     return 0;
 }
 
-//––– Your existing shell helpers (prompt, parser, executor) –––
 void print_prompt() {
     char cwd[256];
     getcwd(cwd, sizeof(cwd));
@@ -115,7 +112,6 @@ void execute_piped(char *left, char *right) {
     wait(NULL); wait(NULL);
 }
 
-//––– main loop with translation –––
 int main() {
     char *raw, cmd[MAX_INPUT], *pargs[MAX_ARGS], *ppipe[MAX_ARGS];
 
@@ -128,15 +124,13 @@ int main() {
         }
         add_history(raw);
 
-        // 1) Try English translation
         if (translate_english(raw, cmd, sizeof(cmd))) {
             printf("→ executing: %s\n", cmd);
         } else {
             strncpy(cmd, raw, sizeof(cmd));
         }
         free(raw);
-
-        // 2) Handle pipe or simple
+        
         if (strchr(cmd, '|')) {
             char *left = strtok(cmd, "|");
             char *right= strtok(NULL, "|");
