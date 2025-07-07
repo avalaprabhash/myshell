@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libreadline-dev
+
+      - name: Build
+        run: make
+
+      - name: Smoke test
+        run: echo "list files" | ./myshell | grep -q "myshell.c"
