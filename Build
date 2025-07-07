@@ -1,0 +1,3 @@
+git clone https://github.com/avalaprabhash/myshell.git
+cd myshell
+make
